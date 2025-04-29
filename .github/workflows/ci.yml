@@ -1,4 +1,4 @@
-name: React CI Unit Tests
+name: React CI Unit Tests for my-app
 
 on:
   pull_request:
@@ -10,6 +10,8 @@ on:
 
 env:
   APP_DIR: my-app
+  APP_NAME: my-app
+  NODE_VERSION: '23'
 
 jobs:
   test:
@@ -22,12 +24,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '23'
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
         run: npm install
         working-directory: ${{ env.APP_DIR }}
 
       - name: Run Tests
-        run: npm test -- --watchAll=false
+        run: | 
+          npm test -- --watchAll=false --ci --reporters=default --reporters=jest-junit
         working-directory: ${{ env.APP_DIR }}
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ${{ env.APP_DIR }}/junit.xml
