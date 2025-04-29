@@ -37,16 +37,6 @@ jobs:
           npm test -- --watchAll=false --ci --reporters=default --reporters=jest-junit --coverage
         working-directory: ${{ env.APP_DIR }}
 
-      - name: Debug List coverage directory
-        run: ls -R coverage
-        working-directory: ${{ env.APP_DIR }}
-
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: ${{ env.APP_DIR }}/junit.xml
-
       - name: Upload Test Report (JUnit XML)
         uses: actions/upload-artifact@v4
         with:
@@ -59,7 +49,17 @@ jobs:
           name: ${{ env.APP_NAME }}-coverage-report
           path: ${{ env.APP_DIR }}/coverage
   
+      - name: Post test result comment on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            🧪 Test Results for `${{ env.APP_NAME }}`
+            - JUnit report and coverage have been uploaded.
+            - See GitHub Actions artifacts for details.
+
       - name: Notify Slack if tests fail
+        if: failure()
         uses: slackapi/slack-github-action@v1.24.0
         with:
          payload: |
