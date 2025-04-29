@@ -42,3 +42,25 @@ jobs:
         with:
           name: test-results
           path: ${{ env.APP_DIR }}/junit.xml
+
+      - name: Upload Test Report (JUnit XML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-test-results
+          path: ${{ env.APP_DIR }}/junit.xml
+  
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_NAME }}-coverage-report
+          path: ${{ env.APP_DIR }}/coverage
+  
+      - name: Notify Slack if tests fail
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+         payload: |
+              {
+                "text": ":x: Test failed for `${{ env.APP_NAME }}` on `${{ github.ref }}`.\nCheck the Actions tab for details."
+              }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
