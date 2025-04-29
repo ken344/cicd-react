@@ -34,7 +34,11 @@ jobs:
 
       - name: Run Tests
         run: | 
-          npm test -- --watchAll=false --ci --reporters=default --reporters=jest-junit
+          npm test -- --watchAll=false --ci --reporters=default --reporters=jest-junit --coverage
+        working-directory: ${{ env.APP_DIR }}
+
+      - name: Debug List coverage directory
+        run: ls -R coverage
         working-directory: ${{ env.APP_DIR }}
 
       - name: Upload Test Report
