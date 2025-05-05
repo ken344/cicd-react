@@ -1,0 +1,10 @@
+name: Timeout Test
+on: push
+jobs:
+  sleep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: |
+          echo "This job will timeout after 1 minute"
+          sleep 120
