@@ -1,0 +1,32 @@
+name: Contexts
+on:
+    push:
+
+jobs:
+    print:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check Context
+              run: |
+                echo "github: ${{ toJson(github) }}"
+                echo "github.actor: ${{ github.actor }}"
+                echo "github.run_id: ${{ github.run_id }}"
+                echo "github.workspace: ${{ github.workspace }}"
+                echo "github.repository: ${{ github.repository }}"
+                echo "github.event_name: ${{ github.event_name }}"
+                echo "github.actor: ${{ github.actor }}"
+                echo "github.event: ${{ toJson(github.event) }}"
+                echo "github.ref: ${{ github.ref }}"
+                echo "github.ref_type: ${{ github.ref_type }}"
+            
+            - name: Check Job Context
+              run: |
+                echo "job: ${{ toJson(job) }}"
+                echo "job.status: ${{ job.status }}"
+
+            - name: Check Environment Context
+              run: |
+                echo "env: ${{ toJson(env) }}"
+                echo "----env----"
+                printenv
+                echo "----env----"
